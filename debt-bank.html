@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Bank - Secure</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style> body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; } </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+  <!-- LOGIN / SIGNUP -->
+  <div id="auth-screen">
+    <div class="max-w-md mx-auto p-8 pt-20">
+      <h1 class="text-4xl font-bold text-green-500 text-center mb-10">Universal Bank</h1>
+
+      <div id="signup-form">
+        <input id="name" placeholder="Full Name" class="w-full p-4 mb-4 bg-gray-800 rounded-2xl">
+        <input id="email" placeholder="Email" class="w-full p-4 mb-4 bg-gray-800 rounded-2xl">
+        <input id="password" type="password" placeholder="Password" class="w-full p-4 mb-6 bg-gray-800 rounded-2xl">
+        <button onclick="signup()" class="w-full bg-green-600 py-4 rounded-2xl font-bold">Create Account</button>
+        <p class="text-center mt-6">Have an account? <span onclick="toggleForms()" class="text-green-400 cursor-pointer">Login</span></p>
+      </div>
+
+      <div id="login-form" class="hidden">
+        <input id="login-email" placeholder="Email" class="w-full p-4 mb-4 bg-gray-800 rounded-2xl">
+        <input id="login-password" type="password" placeholder="Password" class="w-full p-4 mb-6 bg-gray-800 rounded-2xl">
+        <button onclick="login()" class="w-full bg-green-600 py-4 rounded-2xl font-bold">Login</button>
+        <p class="text-center mt-6">New user? <span onclick="toggleForms()" class="text-green-400 cursor-pointer">Sign Up</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="hidden p-6">
+    <header class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-green-500">Universal Bank</h1>
+      <button onclick="logout()" class="text-red-400">Logout</button>
+    </header>
+
+    <p id="welcome" class="text-xl mb-8"></p>
+
+    <!-- Accounts -->
+    <div class="space-y-6">
+      <div class="bg-gray-800 rounded-3xl p-6">
+        <p class="text-sm text-gray-400">UNIVERSAL COLLEGE ••••7169</p>
+        <p class="text-4xl font-bold text-green-400 mt-2">$70,000.00</p>
+        <button onclick="attemptTransfer()" class="mt-6 w-full bg-green-600 py-4 rounded-2xl">Transfer</button>
+      </div>
+
+      <div class="bg-gray-800 rounded-3xl p-6">
+        <p class="text-sm text-gray-400">UNIVERSAL SAVINGS ••••0393</p>
+        <p class="text-4xl font-bold text-green-400 mt-2">$5,000,000.00</p>
+        <button onclick="attemptTransfer()" class="mt-6 w-full border border-green-500 py-4 rounded-2xl text-green-400">Transfer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEBT MODAL -->
+  <div id="debt-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-3xl p-8 max-w-md w-full">
+      <h2 class="text-2xl font-bold text-center mb-6">Pay Debt First</h2>
+      <p class="text-center mb-8 text-gray-300">Clear your $700 debt to unlock transfers.</p>
+      <button onclick="payDebt()" class="w-full bg-green-600 py-4 rounded-2xl font-bold text-lg mb-3">Pay $700 Now</button>
+      <button onclick="closeModal()" class="w-full text-gray-400">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    let debtPaid = false;
+
+    function toggleForms() {
+      document.getElementById('signup-form').classList.toggle('hidden');
+      document.getElementById('login-form').classList.toggle('hidden');
+    }
+
+    function signup() {
+      const name = document.getElementById('name').value || "Sophia";
+      localStorage.setItem('ub_user', JSON.stringify({name}));
+      showDashboard(name);
+    }
+
+    function login() {
+      const name = "Sophia";
+      showDashboard(name);
+    }
+
+    function showDashboard(name) {
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('welcome').innerHTML = `Welcome back, ${name} 👋`;
+    }
+
+    function attemptTransfer() {
+      if (!debtPaid) {
+        document.getElementById('debt-modal').classList.remove('hidden');
+      } else {
+        alert("✅ Transfer completed successfully!");
+      }
+    }
+
+    function payDebt() {
+      debtPaid = true;
+      document.getElementById('debt-modal').classList.add('hidden');
+      alert("✅ Debt paid! Transfers are now unlocked.");
+    }
+
+    function closeModal() {
+      document.getElementById('debt-modal').classList.add('hidden');
+    }
+
+    function logout() {
+      location.reload();
+    }
+
+    // Auto-login if previously used
+    if (localStorage.getItem('ub_user')) {
+      showDashboard("Sophia");
+    }
+  </script>
+</body>
+</html>
